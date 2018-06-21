@@ -14,11 +14,18 @@ const User = require('../models/User');
 const router = express.Router();
 const authConfig = require('../config/auth');
 
+function generateToken(params = {}){
+    return jswt.sign(params, authConfig.secret,{
+        expiresIn: 86400,
+    });
+}
 
 /**
- * @param router Usado para redirecionar URL de registro
- * @param email Usado para validao se o email ja existe
- * @param User para pegar os dados que a tabela usuario tem
+ * @constant router Usado para redirecionar URL de registro
+ * @constant email Usado para validao se o email ja existe
+ * @constant User para pegar os dados que a tabela usuario tem
+ * @param req - requisição da aplicação
+ * @param res - resposta da aplicação
  * @description ele cadastra na base de dados caso os dados nao existam, se existir ele volta uma mensagem de erro 
  */
 router.post('/register', async(req, res) => {
@@ -32,7 +39,9 @@ router.post('/register', async(req, res) => {
 
         user.password = undefined;
 
-        return res.send({ user });
+        return res.send({ user,
+            token: generateToken({ id: user.id}),
+        });
 
     } catch (error) {
         return res.status(400).send({error: 'Registration failed'});
@@ -40,6 +49,14 @@ router.post('/register', async(req, res) => {
     }
 });
 
+/**
+ * @constant router Usado para redirecionar URL de autentificação 
+ * @constant email Usado para validao se o email ja existe
+ * @constant User para pegar os dados que a tabela usuario tem
+ * @param req - requisição da aplicação
+ * @param res - resposta da aplicação
+ * @description ele autentica o usuario para ve se esta cadastrado
+ */
 router.post('/authenticate', async(req, res)=>{
     const {email, password} = req.body;
 
@@ -51,12 +68,11 @@ router.post('/authenticate', async(req, res)=>{
     if(! await bcrypt.compare(password, user.password)) 
         return res.status(400).send({error:'invalid password '});
 
-        res.send({ user });
+        res.send({ user, 
+            token: generateToken({ id: user.id}),
+        });
 
         user.password = undefined;
-
-        const token = jswt.sign({id: user.id}, );
-
 });
 
 module.exports = app => app.use('/auth', router);
