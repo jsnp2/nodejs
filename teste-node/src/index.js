@@ -7,11 +7,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res)=> {
-    res.sendfile('./view/index.html');
+    res.sendfile('./app/view/index.html');
 });
 
-require('./controllers/authController')(app);
-require('./controllers/projectController')(app);
+require('./app/controllers/index')(app);
 
 app.listen(3000);
 

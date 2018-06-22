@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 const jswt = require ('jsonwebtoken')
 const User = require('../models/User');
 const router = express.Router();
-const authConfig = require('../config/auth');
+const authConfig = require('../../config/auth');
 
 function generateToken(params = {}){
     return jswt.sign(params, authConfig.secret,{

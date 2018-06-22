@@ -1,5 +1,5 @@
 //Importando a requisicao de acesso a base que ja existe na pasta DATABASE
-const mongoose = require('../database');
+const mongoose = require('../../database');
 const bcrypt = require('bcryptjs');
 
 //campos que vamo ter dentro do banco de dados da tablea USER
