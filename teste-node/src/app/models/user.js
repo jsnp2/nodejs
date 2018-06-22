@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         select: false,
     },
+    passwordResetToken:{
+        type: String,
+        select: false,
+    },
     //Data de quando foi Criada
     CreatedAt: {
         type: Date,
